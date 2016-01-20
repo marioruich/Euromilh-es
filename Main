@@ -1,0 +1,382 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int nrs[10][5];
+int estrelas[10][1];
+int sorteio[7];
+int nrschaves, sorteara = 0;
+void menu();
+void sorteiorealizado();
+void mostrarapostas(){
+	int n = 0;
+	//Mostrar numeros introduzidos nas apostas
+	for (int i = 0; i < nrschaves; i++){
+		printf("%d: Aposta\n\n", n = i + 1);
+		//Colunas do Array / Numeros da aposta
+		for (int j = 0; j < 5; j++){
+			printf("%d ", nrs[i][j]);
+		}
+		printf("\n");
+	}
+	getchar();
+}
+//Funçao para comparar as apostas com o sorteio, mostrar premios
+void resultados(){
+	int i, j, n, premio, total = 0, m=0;
+	system("cls");
+	printf("\nEUROMILHOES - RESULTADOS\n\n");
+	getchar();
+	if (nrs[0][0] == 0){
+		printf("Erro! Tem que realizar a aposta.\n");
+	}
+	else if (sorteio[0] == 0){
+		printf("Erro! Tem que gerar a chave.\n");
+	}
+	else{
+		for (i = 0; i < nrschaves; i++){
+			premio = 0;
+			printf("\n%d: Aposta\n", n = i + 1);
+			//Colunas do Array / Numeros da aposta
+			for (j = 0; j < 5; j++){
+				for (int b = 0; b<5; b++){
+					if (nrs[i][j] == sorteio[b]){
+						printf("\nCorrespondencia: Nr introduzido: %d - Nr Sortear: %d\n", nrs[i][j], sorteio[b]);
+						premio = premio + 1;
+					}
+				}
+				
+				}
+			for (int b = 0; b<2; b++){
+					if (estrelas[i][b] == sorteio[m=b+6]){
+						printf("\nCorrespondencia: Estrela introduzido: %d - Nr Sortear: %d\n\a\a", estrelas[i][b], sorteio[m=b+6]);
+						premio = premio + 1;
+					}
+			}
+			switch (premio){
+			case 0:
+				printf("\nNenhum Premio.\n");
+				break;
+			case 1:
+				printf("\n6-Premio Euros 10.\n");
+				break;
+			case 2:
+				printf("\n6-Premio Euros 100.\n");
+				total = total + 100;
+				break;
+			case 3:
+				printf("\n5-Premio - Euros 1.000.\n");
+				total = total + 1000;
+				break;
+			case 4:
+				printf("\n4-Premio - Euros 10.000.\n");
+				total = total + 10000;
+				break;
+			case 5:
+				printf("\n3-Premio - Euros 100.000.\n");
+				total = total + 100000;
+				break;
+			case 6:
+				printf("\n2-Premio - Euros 1.000.000.\n");
+				total = total + 1000000;
+				break;
+			case 7:
+				printf("\n1-Premio - Euros 15.000.000\a\a\a\a\a.\n");
+				total = total + 15000000;
+				break;
+			}
+
+			printf("\n");
+		}
+		if (total == 0){
+			printf("\nFica para a proxima, Aposte sempre nos jogos SANTA-CASA-PSI\n\n");
+		}
+		else{
+			printf("Parabens, ganhou no total Euros %d \n", total);
+		}
+
+	}
+	getchar();
+}
+//Procura se o numero introduzido no apostar ja existe
+int nrsearch(int nr, int a, int j){
+	int aa = 0, i = 0;
+	for (i; i <= j; i++){
+		if (nrs[a][i] == nr){
+			aa = aa + 1;
+		}
+	}
+	aa = aa - 1;
+	return aa;
+
+}
+int nrsearchestrelas(int nr, int a, int j){
+	int aa = 0, i = 0;
+	for (i; i <= j; i++){
+		if (estrelas[a][i] == nr){
+			aa = aa + 1;
+		}
+	}
+	aa = aa - 1;
+	return aa;
+
+}
+int controloapostas(int i, int j){
+	//Controla se o numero é menor que 1
+	if (nrs[i][j]<1) {
+		printf("Impossivel, o numero tem que ser entre 1 e 50.\n");
+		j = j - 1;
+		//Controla se o numero é maior que 50
+	}
+	else if (nrs[i][j]>50){
+		printf("Impossivel, o numero tem que ser entre 1 e 50.\n");
+		j = j - 1;
+		//Controla se os numeros são repetidos
+	}
+	else if (nrsearch(nrs[i][j], i, j) == 1){
+		printf("Nao introduzir numeros repetidos.\n");
+		j = j - 1;
+	}
+	return j;
+}
+int controloestrelas(int i, int j){
+	if (estrelas[i][j]<1) {
+		printf("Impossivel, o numero tem que ser entre 1 e 11.\n");
+		j = j - 1;
+	}
+	else if (estrelas[i][j]>11){
+		printf("Impossivel, o numero tem que ser entre 1 e 11.\n");
+		j = j - 1;
+	}
+	else if (nrsearchestrelas(estrelas[i][j], i, j) == 1){
+		printf("Nao introduzir numeros repetidos.\n");
+		j = j - 1;
+	}
+	return j;
+}
+//Funcao ordena numeros apostar
+void ordenarapostar(int a, int tamanho){
+	int aux;
+	//Ordenar os numeros
+	if(tamanho==5){
+	for (int i = tamanho - 1; i >= 1; i--) {
+		for (int j = 0; j < i; j++) {
+			if (nrs[a][j]>nrs[a][j + 1]) {
+				aux = nrs[a][j];
+				nrs[a][j] = nrs[a][j + 1];
+				nrs[a][j + 1] = aux;
+			}
+		}
+	}
+	}else{
+	for (int i = tamanho - 1; i >= 1; i--) {
+		for (int j = 0; j < i; j++) {
+			if (estrelas[a][j]>estrelas[a][j + 1]) {
+				aux = estrelas[a][j];
+				estrelas[a][j] = estrelas[a][j + 1];
+				estrelas[a][j + 1] = aux;
+			}
+		}
+	}
+	}
+}
+//Funçao para o utilizar colocar as apostas
+void apostar(){
+	//Variaveis
+	int i, n, j, m =0;
+	//Inicio codigo
+	system("cls");
+	printf("\nEUROMILHOES - APOSTAR\n\n");
+	if (sorteara == 0){
+		do{
+			printf("Quantas apostas deseja realizar: ");
+			scanf_s("%d", &nrschaves);
+		} while (nrschaves>10);
+		system("cls");
+		//Linhas do array / Cada aposta
+		for (i = 0; i < nrschaves; i++){
+			system("cls");
+			printf("%d: Aposta\n\n", n = i + 1);
+			//Colunas do Array / Numeros da aposta
+			for (j = 0; j < 5; j++){
+				printf("Numero -%d- : ", j + 1);
+				scanf_s("%d", &nrs[i][j]);
+				j = controloapostas(i, j);
+			}
+			ordenarapostar(i,5);
+			for (j = 0; j < 2; j++){
+				printf("Estrela -%d- : ", m=j+1);
+				scanf_s("%d", &estrelas[i][j]);
+				j = controloestrelas(i, j);
+			}
+			//Funcao ordenar
+			ordenarapostar(i,1);
+		}
+		system("cls");
+				//Mostrar numeros introduzidos nas apostas
+		getchar();
+		for (i = 0; i < nrschaves; i++){
+			printf("\n%d: Aposta\n\n", n = i + 1);
+			//Colunas do Array / Numeros da aposta
+			for (j = 0; j <= 4; j++){
+				printf("%d ", nrs[i][j]);
+			}
+			printf("  ");
+			for (j = 0; j <= 1; j++){
+				printf("%d ", estrelas[i][j]);
+			}
+			printf("\n");
+		
+		}
+		
+		getchar();
+	}else{
+		sorteiorealizado();
+	}
+}
+//Ordena os numeros
+void ordenar(){
+	int tamanho = 5;
+	int aux;
+	//Ordenar os numeros
+	for (int i = tamanho - 1; i >= 1; i--) {
+		for (int j = 0; j < i; j++) {
+			if (sorteio[j]>sorteio[j + 1]) {
+				aux = sorteio[j];
+				sorteio[j] = sorteio[j + 1];
+				sorteio[j + 1] = aux;
+			}
+		}
+	}
+	printf("\n\nA chave sorteada e: ");
+	//Percorre o vetor para mostrar os numeros ordenados
+	printf("\n\nNumeros:\n\n");
+	for (int i = 0; i < tamanho; i++){
+		printf("%d ", sorteio[i]);
+	}
+	printf("\n\nEstrelas:\n\n");
+	for (int i = 6; i <= 7; i++){
+		printf("%d ", sorteio[i]);
+	}
+	printf("\n\n");
+	fflush(stdin);
+	getchar();
+}
+//Sorteia os numeros
+void sortear(){
+	int i;
+	system("cls");
+	printf("\n=============EUROMILHOES - SORTEAR=============\n");
+	if (sorteara == 1){
+		getchar();
+		printf("\nJa foi realizado o sorteio...\n\n");
+		printf("A chave sorteada foi a seguinte: ");
+		printf("\n\nNumeros:\n\n");
+		for (int i = 0; i < 5; i++){
+			printf("%d ", sorteio[i]);
+		}
+		printf("\n\nEstrelas:\n\n");
+		for (int i = 6; i <= 7; i++){
+			printf("%d ", sorteio[i]);
+		}
+		getchar();
+	}
+	else if (nrs[0][0] == 0){
+		getchar();
+		printf("\nTem de realizar primeiro aposta.\n\n");
+		getchar();
+	}
+	else{
+		for (i = 0; i <= 5; i++){
+			//Gera numeros aleatorios
+			sorteio[i] = rand() % 50 + 1;
+		}
+		srand(time(NULL));
+		for (i = 6; i <= 7; i++){
+			//Gera numeros aleatorios
+
+			sorteio[i] = rand() % 6 + (rand() % 5 + 1);
+		}
+
+		sorteara = sorteara + 1;
+		//Ordenar os numeors
+		ordenar();
+	}
+}
+//Menu de quando o sorteio já foi realizado
+void sorteiorealizado(){
+	int opcao;
+	system("cls");
+	printf("O sorteio ja foi realizado, ja nao e possivel realizar apostas!\n\n");
+	printf("Opcoes: \n\n");
+	printf("1...Consultar resultados. \n");
+	printf("2...Mostras as minhas apostas. \n");
+	printf("3...Apostar para o proximo sorteio. \n");
+	printf("4...Voltar ao menu: \n");
+	printf("5...Sair: \n");
+	printf("Introduza a opcao: ");
+	scanf_s("%d", &opcao);
+	switch (opcao){
+	case 1:
+		system("cls");
+		resultados();
+		break;
+
+	case 2:
+		mostrarapostas();
+		getchar();
+		break;
+	case 3:
+		sorteara = sorteara - 1;
+		nrs[0][0] = 0;
+		break;
+	case 4:
+		menu();
+		break;
+	case 5:
+		exit(0);
+	default:
+		break;
+	}
+
+}
+//Mostra o menu
+void menu(){
+	int opcao;
+	int sorteio[5];
+	while (1){
+		system("cls");
+		printf("\nEUROMILHOES - MENU PRINCIPAL\n\n");
+		printf("1..... Apostar\n");
+		printf("2..... Sortear\n");
+		printf("3..... Resultados\n");
+		printf("4..... Sair\n\n");
+		printf("Introduza a opcao: ");
+		scanf_s("%d", &opcao);
+		switch (opcao){
+		case 1:
+			//Chama função apostar
+			apostar();
+			break;
+		case 2:
+			//Chama função sortear e grava no menu
+			sortear();
+			break;
+		case 3:
+			//Chama função resultados
+			resultados();
+			break;
+		case 4:
+			//Fecha programa
+			exit(0);
+		default:
+			break;
+		}
+	}
+}
+int main(){
+	srand(time(NULL));
+	menu();
+	fflush(stdin);
+	getchar();
+
+}
